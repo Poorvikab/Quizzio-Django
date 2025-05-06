@@ -1,0 +1,91 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CREATE!</title>
+    <link rel="icon" href="{% static 'images/logo.png' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/create.css' %}">
+</head>
+<body>
+
+    <div>
+        <img src="{% static 'images/createbtn.png' %}" id="image">
+        <button id="addbtn"></button>
+    </div>
+
+    <div id="popup">
+        <img src="{% static 'images/namebtn.png' %}" id="namebtn">
+        <form method="POST" id="folderForm">
+            {% csrf_token %}
+            <input type="text" maxlength="6" placeholder="NAME!" id="inputBox" required>
+        </form>
+    </div>
+
+    <div id="folderContainer">
+        {% for folder in folders %}
+        <div class="folder">
+            <a href="{% url 'custom_quiz' folder_name=folder.name %}" target="_blank">
+                <img src="{% static 'images/folderpng.png' %}">
+            </a>
+            <span>{{ folder.name }}</span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script src="{% static 'js/create.js' %}"></script>
+    <script>
+        // Set Django URL and CSRF token for JS
+        const createFolderUrl = "{% url 'create_folder' %}";
+        const csrfToken = "{{ csrf_token }}";
+
+        // Show popup when add button is clicked
+        document.getElementById("addbtn").addEventListener("click", function() {
+            document.getElementById("popup").style.display = "block";
+        });
+
+        // Close popup when close button is clicked
+        document.getElementById("closePopup").addEventListener("click", function() {
+            document.getElementById("popup").style.display = "none";
+        });
+
+        // Handle Enter key inside input box
+        document.getElementById("inputBox").addEventListener("keypress", function (event) {
+            if (event.key === "Enter" && this.value.trim() !== "") {
+                event.preventDefault();
+                let name = this.value.trim();
+
+                fetch(createFolderUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": csrfToken
+                    },
+                    body: `folder_name=${encodeURIComponent(name)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert("Failed to create folder: " + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred: ' + error.message);
+                });
+
+                document.getElementById("popup").style.display = "none";
+                this.value = "";
+            }
+        });
+    </script>
+
+</body>
+</html>
