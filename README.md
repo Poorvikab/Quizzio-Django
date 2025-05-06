@@ -122,7 +122,6 @@ Quizzio-Django/
 
 ## 🏆 Acknowledgments
 
-Built with passion by [Poorvika](https://github.com/Poorvikab) ❤️
 Thanks to the open-source community and Django developers worldwide.
 
 
