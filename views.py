@@ -145,8 +145,8 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 
 openai.api_type = "azure"
-openai.api_base = "https://poorv-m6mlihsh-swedencentral.cognitiveservices.azure.com/"
-openai.api_key = os.getenv("6SbFY4777jfLrezlsw1ULnOVfdF0uzdUnwiEKUuKloUpkgwJ79xgJQQJ99BBACfhMk5XJ3w3AAAAACOGpDYG")
+openai.api_base = "Enter your endpoint URL"
+openai.api_key = os.getenv("Enter your API key)
 openai.api_version = "2024-02-15-preview"
 
 @csrf_exempt
